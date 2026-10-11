@@ -1,9 +1,16 @@
 # Hermes Signal Bot
 
-Sistema de detección de señales para Binance. Analiza 90 pares en cada pasada (los de mayor volumen,
-sin stablecoins ni pares apalancados), sobre 5 temporalidades, detecta divergencias de RSI confirmadas por
-volumen, asigna una puntuación calibrada, y notifica por Telegram y Discord con
-gráfico y contexto de derivados. Posteriormente evalúa el resultado de cada señal y lo publica.
+Escanea **90 pares de Binance** en cinco temporalidades buscando un patrón concreto: **divergencias de
+RSI confirmadas por volumen**. Los indicadores (RSI, ATR y ADX) están implementados a mano siguiendo la
+formulación de Wilder, y la puntuación de cada señal, de 1 a 10, está calibrada contra el resultado real
+de las 900 anteriores.
+
+El ciclo completo corre en **32 segundos** y el reloj lo dispara **cada 5 minutos**. Cuando la vela cierra
+y el patrón aparece, el aviso sale por Telegram y Discord con su gráfico, sus niveles y el contexto de
+derivados. Después el sistema vuelve sobre cada señal y publica cómo terminó.
+
+El marcador que publica incluye los resultados que no le favorecen: la serie histórica medida, con sus
+casos en contra, está en «Resultados medidos», más abajo.
 
 Alcance: sistema de notificación. No ejecuta operaciones, no administra claves de exchange y no tiene
 acceso a fondos.
