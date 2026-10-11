@@ -51,7 +51,7 @@ BASE_HOSTS = ["https://api.binance.com", "https://data-api.binance.vision"]
 _BASE_OK = None
 MS = {"15m": 900_000, "1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000}
 
-WATCHLIST_N = 45          # pares vigilados (top por volumen). Estaba en 20 y las señales bajaron a
+WATCHLIST_N = 90          # pares vigilados (top por volumen). Se subió de 45 a 90 al paralelizar\n                          # el escaneo (2026-10-11): el mismo ciclo pasó de 228 s a 17 s. Estaba en 20 y las Estaba en 20 y las señales bajaron a
                           # 2-4 por día; se subió a 45 (no 60) porque el ciclo completo tiene que entrar
                           # en los 15 min del reloj: con 60 los flujos tardaban 630 s y algún ciclo se
                           # pasaba de tiempo (se vio un completed/failure). Con 45 quedan ~8 min.
@@ -383,6 +383,8 @@ def top_symbols(n):
     rows = []
     for x in d:
         s = x["symbol"]
+        if not s.isascii():          # pares con caracteres no ASCII (listados nuevos): rompen el log
+            continue
         if not s.endswith("USDT") or s.endswith(LEV_SUFFIX) or s[:-4] in EXCLUDE:
             continue
         rows.append((s, float(x["quoteVolume"])))
@@ -1009,12 +1011,31 @@ def scan(args, st, dry=False):
         f"volumen {'ON' if USE_VOL else 'OFF'} · "
         f"ADX {'≥' + format(MIN_ADX, '.0f') if MIN_ADX > 0 else 'OFF'}")
     found, seen, cooldown = [], st["seen"], st["cooldown"]
+
+    # Las velas se bajan EN PARALELO: es lo único lento del escaneo (1 s por pedido, 225 pedidos por
+    # flujo) y de la API de Binance sólo se usa ~7% del cupo, así que el tope real es el reloj de 15
+    # minutos. La detección y el estado (dedupe y enfriamiento) siguen en serie, igual que antes.
+    from concurrent.futures import ThreadPoolExecutor
+
+    def _traer(par):
+        sym_, tf_ = par
+        try:
+            return par, klines(sym_, tf_, 300)
+        except Exception as e:                                    # noqa: BLE001
+            log(f"  ! {sym_} {tf_}: {e}")
+            return par, None
+
+    tareas = [(s, tf) for s in syms for tf in INTERVALS]
+    velas = {}
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        for par, ks_ in ex.map(_traer, tareas):
+            if ks_:
+                velas[par] = ks_
+
     for sym in syms:
         for tf in INTERVALS:
-            try:
-                ks = klines(sym, tf, 300)
-            except Exception as e:
-                log(f"  ! {sym} {tf}: {e}")
+            ks = velas.get((sym, tf))
+            if not ks:
                 continue
             for s in detectar(sym, tf, ks):
                 key = f"{s['sym']}|{s['tf']}|{s['pivot_ts']}"
