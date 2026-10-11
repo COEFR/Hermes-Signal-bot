@@ -95,9 +95,11 @@ def tareas_del_dia(hora=None, dia=None, ruta=None):
         except Exception:
             estado = {}
     extra = []
-    if hora >= 16 and estado.get("reporte") != hoy:
-        extra.append("reporte diario")
-        estado["reporte"] = hoy
+    # Reporte diario DESACTIVADO a pedido (2026-10-11): sólo se quieren las alertas.
+    # Para reactivarlo, descomentar las tres líneas de abajo.
+    # if hora >= 16 and estado.get("reporte") != hoy:
+    #     extra.append("reporte diario")
+    #     estado["reporte"] = hoy
     if dia == 0 and hora >= 17 and estado.get("marcador") != hoy:
         extra.append("marcador semanal")
         estado["marcador"] = hoy
