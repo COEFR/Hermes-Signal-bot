@@ -1,28 +1,30 @@
-2026-10-11 19:37:16 UTC
+2026-10-11 23:10:11 UTC
 horario disparado: */15 * * * * · seco: False
-runner: GitHub Actions 1000001724 · python 3.12.3
+runner: GitHub Actions 1000001904 · python 3.12.3
 
-[OK ] premium: 228 s
-      2026-10-11 19:27:00 escaneo: 45 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
-      2026-10-11 19:30:46   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] normales: 230 s
-      2026-10-11 19:30:47 escaneo: 45 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
-      2026-10-11 19:34:35     CFXUSDT/1h · puntaje 9/10 → calidad/premium
-      2026-10-11 19:34:36 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-11 19:34:36   1 señales enviadas de a una
-[OK ] momentum: 46 s
-      2026-10-11 19:34:37 escaneo: 45 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-11 19:35:21   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] rebote: 47 s
-      2026-10-11 19:35:22 escaneo: 45 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-11 19:36:08   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] contexto de mercado: 24 s
-      2026-10-11 19:36:32 sin novedades (0 evento(s) dentro del silencio de 2 h)
-[OK ] seguimiento: 43 s
-      2026-10-11 19:37:08 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-11 19:37:11 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-11 19:37:13 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-11 19:37:16 cierres publicados: 8 · avisos de seguimiento: 0 · pendientes revisadas: 78
-[OK ] reporte diario: 1 s
-      2026-10-11 19:37:16 telegram sendMessage enviado ok=True
-      2026-10-11 19:37:16 discord enviado ok=True (1 mensaje(s))
+[OK ] premium: 65 s
+      2026-10-11 23:07:25     ICPUSDT/15m · puntaje 2/10 → cantidad
+      2026-10-11 23:07:27 telegram sendPhoto enviado ok=True
+      2026-10-11 23:07:28 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:07:28   1 señales enviadas de a una
+[OK ] normales: 79 s
+      2026-10-11 23:08:41 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:08:46     ICPUSDT/15m · puntaje 2/10 → cantidad
+      2026-10-11 23:08:46 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:08:46   4 señales enviadas de a una
+[OK ] momentum: 24 s
+      2026-10-11 23:09:05 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:09:10     JSTUSDT/1d · puntaje 7/10 → canal por defecto
+      2026-10-11 23:09:10 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:09:10   3 señales enviadas de a una
+[OK ] rebote: 13 s
+      2026-10-11 23:09:12 watchlist actualizada: 90 pares (top 90)
+      2026-10-11 23:09:12 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-11 23:09:23   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] contexto de mercado: 19 s
+      2026-10-11 23:09:43 sin novedades (0 evento(s) dentro del silencio de 2 h)
+[OK ] seguimiento: 28 s
+      2026-10-11 23:10:05 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:10:07 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:10:09 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-11 23:10:11 cierres publicados: 3 · avisos de seguimiento: 1 · pendientes revisadas: 70
