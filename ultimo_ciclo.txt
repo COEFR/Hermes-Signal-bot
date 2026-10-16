@@ -1,20 +1,20 @@
-2026-10-16 23:18:29 UTC
+2026-10-16 23:23:41 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000014869 · python 3.12.3
+runner: GitHub Actions 1000014876 · python 3.12.3
 
-[OK ] premium: 59 s
-      2026-10-16 23:15:30 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
-      2026-10-16 23:16:28   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] normales: 59 s
-      2026-10-16 23:16:28 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
-      2026-10-16 23:17:26   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] momentum: 12 s
-      2026-10-16 23:17:27 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-16 23:17:38   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] rebote: 12 s
-      2026-10-16 23:17:39 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-16 23:17:50   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] contexto de mercado: 19 s
-      2026-10-16 23:18:09 sin novedades (0 evento(s) dentro del silencio de 2 h)
-[OK ] seguimiento: 20 s
-      2026-10-16 23:18:29 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 42
+[OK ] premium: 68 s
+      2026-10-16 23:20:12 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
+      2026-10-16 23:21:20   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] normales: 66 s
+      2026-10-16 23:21:21 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
+      2026-10-16 23:22:26   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] momentum: 14 s
+      2026-10-16 23:22:27 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-16 23:22:39   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] rebote: 14 s
+      2026-10-16 23:22:40 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-16 23:22:53   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] contexto de mercado: 22 s
+      2026-10-16 23:23:15 sin novedades (0 evento(s) dentro del silencio de 2 h)
+[OK ] seguimiento: 25 s
+      2026-10-16 23:23:41 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 42
