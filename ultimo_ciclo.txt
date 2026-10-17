@@ -1,20 +1,20 @@
-2026-10-17 23:43:24 UTC
+2026-10-17 23:48:16 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000018235 · python 3.12.3
+runner: GitHub Actions 1000018242 · python 3.12.3
 
 [OK ] premium: 60 s
-      2026-10-17 23:40:22 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
-      2026-10-17 23:41:21   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 23:45:14 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
+      2026-10-17 23:46:13   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] normales: 60 s
-      2026-10-17 23:41:22 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
-      2026-10-17 23:42:21   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 23:46:14 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
+      2026-10-17 23:47:13   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] momentum: 12 s
-      2026-10-17 23:42:22 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-17 23:42:33   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 23:47:14 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-17 23:47:25   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] rebote: 12 s
-      2026-10-17 23:42:34 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-17 23:42:45   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 23:47:26 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-17 23:47:37   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] contexto de mercado: 19 s
-      2026-10-17 23:43:04 sin novedades (0 evento(s) dentro del silencio de 2 h)
+      2026-10-17 23:47:56 sin novedades (0 evento(s) dentro del silencio de 2 h)
 [OK ] seguimiento: 20 s
-      2026-10-17 23:43:24 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 44
+      2026-10-17 23:48:16 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 44
