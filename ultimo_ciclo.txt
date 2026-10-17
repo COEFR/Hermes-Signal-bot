@@ -1,20 +1,20 @@
-2026-10-17 03:56:27 UTC
+2026-10-17 03:59:46 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000015506 · python 3.12.3
+runner: GitHub Actions 1000015515 · python 3.12.3
 
 [OK ] premium: 60 s
-      2026-10-17 03:53:26 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
-      2026-10-17 03:54:26   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] normales: 59 s
-      2026-10-17 03:54:26 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
-      2026-10-17 03:55:25   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 03:56:38 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
+      2026-10-17 03:57:38   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] normales: 65 s
+      2026-10-17 03:57:39 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
+      2026-10-17 03:58:43   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] momentum: 12 s
-      2026-10-17 03:55:26 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-17 03:55:37   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 03:58:43 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-17 03:58:54   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] rebote: 12 s
-      2026-10-17 03:55:37 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-17 03:55:48   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+      2026-10-17 03:58:55 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-17 03:59:06   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
 [OK ] contexto de mercado: 19 s
-      2026-10-17 03:56:07 sin novedades (0 evento(s) dentro del silencio de 2 h)
+      2026-10-17 03:59:25 sin novedades (0 evento(s) dentro del silencio de 2 h)
 [OK ] seguimiento: 20 s
-      2026-10-17 03:56:27 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 45
+      2026-10-17 03:59:46 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 45
