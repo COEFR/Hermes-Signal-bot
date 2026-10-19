@@ -837,6 +837,7 @@ def fmt_momentum(s, stats=None):
           f"objetivo ${fmt_precio(s['tp'])} (+{s.get('tp_pct', 0):.2f}%) · "
           f"stop {MOM_SL:g}×ATR / objetivo {MOM_TP:g}×ATR, tope {REF_NIVELES['momentum'][2]} velas",
           f"🧭 Horizonte: {s.get('horizonte', '20 velas (días)')}",
+          enlaces(s),
           f"🕐 {time.strftime('%Y-%m-%d %H:%M')} (UTC−4)",
           "⚠️ Es una señal de COMPRA. Medido: +0.84% por señal en 3 años (n=811), pero la 1ª de las 3 "
           "ventanas cerró en −1.23% → los niveles son una **referencia para poder seguirla**, no una "
@@ -863,6 +864,7 @@ def fmt_rebote(s, stats=None):
           f"objetivo ${fmt_precio(s['tp'])} (+{s.get('tp_pct', 0):.2f}%) · "
           f"stop {REB_SL:g}×ATR / objetivo {REB_TP:g}×ATR, tope {REF_NIVELES['rebote'][2]} velas",
           f"🧭 Horizonte: {s.get('horizonte', '40 velas (horas)')}",
+          enlaces(s),
           f"🕐 {time.strftime('%Y-%m-%d %H:%M')} (UTC−4)",
           "⚠️ Es una compra contra el pánico y el costo de ida y vuelta (~0,2%) se come parte de la "
           "ganancia. Medido: +0.15% por señal en 3 años (n=379) con la 2ª ventana en −0.10% → los "

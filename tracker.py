@@ -146,13 +146,13 @@ def avisos_seguimiento(f, ks, umbral=0.75):
         salida.append(("cerca_objetivo",
                        f"⚠️ **CERCA DEL OBJETIVO** ({progreso * 100:.0f}% del camino) · {nivel} · {cab}\n"
                        f"📉 entrada {S.fmt_precio(entry)} → ahora {S.fmt_precio(precio)} · falta "
-                       f"**{falta:.2f}%** para el objetivo ({S.fmt_precio(tp)}) · {abierta_h:.1f} h abierta"))
+                       f"**{falta:.2f}%** para el objetivo ({S.fmt_precio(tp)}) · {abierta_h:.1f} h abierta" + "\n" + S.enlaces(f)))
     if en_contra >= umbral:
         falta = abs(float(sl) - precio) / precio * 100
         salida.append(("cerca_stop",
                        f"🛑 **CERCA DEL STOP** ({en_contra * 100:.0f}% del camino) · {nivel} · {cab}\n"
                        f"📈 entrada {S.fmt_precio(entry)} → ahora {S.fmt_precio(precio)} · el stop está a "
-                       f"**{falta:.2f}%** ({S.fmt_precio(sl)}) · {abierta_h:.1f} h abierta"))
+                       f"**{falta:.2f}%** ({S.fmt_precio(sl)}) · {abierta_h:.1f} h abierta" + "\n" + S.enlaces(f)))
     if atr and progreso < umbral and en_contra < umbral:
         margen = 0.5 * atr
         if (corto and precio > float(entry) + margen) or (not corto and precio < float(entry) - margen):
@@ -160,7 +160,7 @@ def avisos_seguimiento(f, ks, umbral=0.75):
                            f"🚫 **DIVERGENCIA INVALIDADA** · {nivel} · {cab}\n"
                            f"📈 el precio volvió sobre la entrada ({S.fmt_precio(precio)} vs "
                            f"{S.fmt_precio(entry)}) → la lectura {'bajista' if corto else 'alcista'} ya no se "
-                           f"sostiene · stop intacto en {S.fmt_precio(sl)} · {abierta_h:.1f} h abierta"))
+                           f"sostiene · stop intacto en {S.fmt_precio(sl)} · {abierta_h:.1f} h abierta" + "\n" + S.enlaces(f)))
     return salida
 
 
@@ -190,7 +190,8 @@ def texto_cierre(f, r):
               f"{'📉 short' if corto else '📈 long'} desde {precio} → cerró en {cierre} "
               f"(**{r['mov_pct']:+.2f}% {sentido}**)",
               f"⏱ {duracion(f, r['velas'])} ({r['velas']} {_velas(r['velas'])}) · puntaje {f.get('score')}/10 · "
-              f"flujo {f.get('flujo')}"]
+              f"flujo {f.get('flujo')}",
+              S.enlaces(f)]
     return "\n".join(lineas)
 
 
