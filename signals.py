@@ -872,6 +872,21 @@ def fmt_precio(x):
     return f"{x:.8f}"
 
 
+INTERVALO_TV = {"5m": "5", "15m": "15", "30m": "30", "1h": "60", "2h": "120",
+                "4h": "240", "6h": "360", "12h": "720", "1d": "D", "1w": "W"}
+
+
+def enlaces(s):
+    """Links a TradingView (con el par y la temporalidad) y a MEXC (par base_USDT)."""
+    sym = (s.get("sym") or "").upper()
+    base = sym[:-4] if sym.endswith("USDT") else sym
+    tf = (s.get("tf") or "15m").lower()
+    intervalo = INTERVALO_TV.get(tf, "15")
+    tv = f"https://www.tradingview.com/chart/?symbol=BINANCE%3A{sym}&interval={intervalo}"
+    mexc = f"https://www.mexc.com/exchange/{base}_USDT"
+    return f"🔗 TradingView: {tv}\n🔗 MEXC: {mexc}"
+
+
 def fmt_signal(s, stats):
     """Formato compacto pedido por Dylan (bloques etiquetados + S/R + tipo de divergencia)."""
     short = s["dir"] == "short"
@@ -915,6 +930,8 @@ def fmt_signal(s, stats):
     lineas.append(f"🔔 Entrada ${fmt_precio(s['entry'])} · Stop ${fmt_precio(s['sl'])} "
                   f"({signo}{s['risk_pct']:.2f}%) · Objetivo ${fmt_precio(s['tp'])} "
                   f"({signo}{s.get('tp_pct', TP_MULT * s['risk_pct']):.2f}%) · R:R 1:{rr:.1f}")
+    if s.get("sym"):
+        lineas.append(enlaces(s))
     if rr < 0.95:
         lineas.append("⚠️ El soporte está más cerca que el stop (R:R < 1): conviene esperar un rebote "
                       "para vender mejor, o pasar de largo esta señal.")
