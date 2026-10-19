@@ -5,11 +5,9 @@ name: bot-senales
 # interno. Así funciona incluso con la política de "solo acciones propias" de esta cuenta.
 on:
   schedule:
-    # SOLO el ciclo de 15 min, como respaldo lento (GitHub atrasa sus horarios 1-9 h; el reloj real es
-    # cron-job.org). El reporte diario y el marcador NO van como horario acá: los decide la lógica por
-    # hora de gh_run.py (16:00 UTC = 12:00 Bolivia; lunes 17:00 UTC = 13:00 Bolivia), así no salen a
-    # otra hora ni se pueden duplicar con el horario disparado.
-    - cron: "*/15 * * * *"      # ciclo normal (respaldo)
+    # Respaldo: GitHub no baja de 5 minutos y suele atrasarse (medido el 11/10: corridas cada 5-6 h).
+    # El reloj puntual es externo (cron-job.org o la VPS) y llama al workflow_dispatch.
+    - cron: "*/5 * * * *"
   workflow_dispatch:            # botón para probar a mano (y lo usa el reloj externo)
     inputs:
       probar_entrega:
