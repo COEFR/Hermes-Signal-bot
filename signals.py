@@ -98,6 +98,9 @@ TIPO = "divergencia"               # --tipo: divergencia | momentum | rebote
 CANAL_ALTO = ""
 CANAL_MEDIO = ""
 CANAL_BAJO = ""
+# Canal para el patrón GOTY (3 velas verdes + volumen + RSI alto). El id se puede pisar con
+# la variable DISCORD_RSI_GOTY_CHANNEL; si no, usa el canal creado en el servidor.
+CANAL_GOTY = os.environ.get("DISCORD_RSI_GOTY_CHANNEL") or "1561579030417899571"
 CALIDAD_ALTA = 8
 CALIDAD_MEDIA = 5
 
@@ -614,6 +617,13 @@ def find_signals(symbol, tf, candles):
                 if not (rsi[p2] > rsi[p1] + MIN_RSI_DIFF):
                     continue
             vol_ratio = vols[e] / v_sma[e] if v_sma[e] else 0
+            # PATRÓN GOTY (pedido de Dylan): 3 velas verdes seguidas, la última con volumen
+            # ≥1,2× la media y RSI ≥60. Ahí entra justo cuando el precio empieza a caer.
+            goty = False
+            if direction == "short" and e >= 2:
+                verdes = all(float(closed[e - k][4]) > float(closed[e - k][1]) for k in range(3))
+                rsi_e = rsi[e] if e < len(rsi) and rsi[e] is not None else rsi[p2]
+                goty = bool(verdes and vol_ratio >= VOL_MULT and (rsi_e or 0) >= 60)
             a = adx[e] if e < len(adx) else None
             vol_ok = vol_ratio >= VOL_MULT
             premium = vol_ok and a is not None and a[0] >= MIN_ADX
@@ -652,7 +662,7 @@ def find_signals(symbol, tf, candles):
                 "plus_di": a[1] if a else None,
                 "minus_di": a[2] if a else None,
                 "obv": obv[e] if e < len(obv) else None,
-                "tier": tier, "vol_ok": vol_ok,
+                "tier": tier, "vol_ok": vol_ok, "goty": goty,
                 "pivot_gap": p2 - p1,
                 "tipo": tipo, "soportes": soportes, "resistencias": resistencias,
                 "tp_pct": tp_pct,
@@ -887,6 +897,9 @@ def fmt_signal(s, stats):
     obv = s.get("obv")
     obv_txt = "" if obv is None else (" · OBV: " + ("distribución" if obv < 0 else "acumulación"))
     lineas.append(f"📊 Volumen: {s['vol_ratio']:.1f}× la media{obv_txt}")
+    if s.get("goty"):
+        lineas.append("✨ **Patrón GOTY**: 3 velas verdes seguidas · la última con volumen "
+                      f"{s['vol_ratio']:.1f}× · RSI {s.get('rsi_now', 0):.1f}")
     deriv = linea_derivados(s.get("_deriv"))
     if deriv:
         lineas.append(deriv)
@@ -1074,8 +1087,10 @@ def scan(args, st, dry=False):
             con_derivados(s)
             registrar(s, DISCORD_OVERRIDE)
             # cada señal a su canal según el puntaje (calidad / media / cantidad)
-            _canal = canal_por_puntaje(s.get("score"))
-            _nombre = ("calidad/premium" if _canal == CANAL_ALTO and CANAL_ALTO else
+            _canal = (CANAL_GOTY if s.get("goty") and CANAL_GOTY
+                      else canal_por_puntaje(s.get("score")))
+            _nombre = ("✨ GOTY" if s.get("goty") and CANAL_GOTY else
+                       "calidad/premium" if _canal == CANAL_ALTO and CANAL_ALTO else
                        "media/normales" if _canal == CANAL_MEDIO and CANAL_MEDIO else
                        "cantidad" if _canal == CANAL_BAJO and CANAL_BAJO else "canal por defecto")
             log(f"    {s.get('sym')}/{s.get('tf')} · puntaje {s.get('score')}/10 → {_nombre}")
