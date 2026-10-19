@@ -51,7 +51,8 @@ BASE_HOSTS = ["https://api.binance.com", "https://data-api.binance.vision"]
 _BASE_OK = None
 MS = {"15m": 900_000, "1h": 3_600_000, "4h": 14_400_000, "1d": 86_400_000}
 
-WATCHLIST_N = 90          # pares vigilados (top por volumen). Se subió de 45 a 90 al paralelizar\n                          # el escaneo (2026-10-11): el mismo ciclo pasó de 228 s a 17 s. Estaba en 20 y las Estaba en 20 y las señales bajaron a
+WATCHLIST_N = 200         # pares vigilados (top por volumen). Subido de 90 a 200 el 19-oct
+                          # (el escaneo está paralelizado: 90 pares ~17 s, 200 ~40 s). Se subió de 45 a 90 al paralelizar\n                          # el escaneo (2026-10-11): el mismo ciclo pasó de 228 s a 17 s. Estaba en 20 y las Estaba en 20 y las señales bajaron a
                           # 2-4 por día; se subió a 45 (no 60) porque el ciclo completo tiene que entrar
                           # en los 15 min del reloj: con 60 los flujos tardaban 630 s y algún ciclo se
                           # pasaba de tiempo (se vio un completed/failure). Con 45 quedan ~8 min.
@@ -619,11 +620,17 @@ def find_signals(symbol, tf, candles):
             vol_ratio = vols[e] / v_sma[e] if v_sma[e] else 0
             # PATRÓN GOTY (pedido de Dylan): 3 velas verdes seguidas, la última con volumen
             # ≥1,2× la media y RSI ≥60. Ahí entra justo cuando el precio empieza a caer.
+            # GOTY (medido 2026-10-19 sobre 359 divergencias en 30 días): exigir volumen
+            # 1,2× dejaba 0 señales y las 3 velas verdes recortaban de 27 a 3. La regla que
+            # mejor rinde es volumen ≥1,0× + RSI ≥55; las 3 velas verdes quedan como
+            # etiqueta informativa, no como filtro.
+            GOTY_VOL, GOTY_RSI = 1.0, 55
             goty = False
+            tres_verdes = False
             if direction == "short" and e >= 2:
-                verdes = all(float(closed[e - k][4]) > float(closed[e - k][1]) for k in range(3))
+                tres_verdes = all(float(closed[e - k][4]) > float(closed[e - k][1]) for k in range(3))
                 rsi_e = rsi[e] if e < len(rsi) and rsi[e] is not None else rsi[p2]
-                goty = bool(verdes and vol_ratio >= VOL_MULT and (rsi_e or 0) >= 60)
+                goty = bool(vol_ratio >= GOTY_VOL and (rsi_e or 0) >= GOTY_RSI)
             a = adx[e] if e < len(adx) else None
             vol_ok = vol_ratio >= VOL_MULT
             premium = vol_ok and a is not None and a[0] >= MIN_ADX
@@ -662,7 +669,7 @@ def find_signals(symbol, tf, candles):
                 "plus_di": a[1] if a else None,
                 "minus_di": a[2] if a else None,
                 "obv": obv[e] if e < len(obv) else None,
-                "tier": tier, "vol_ok": vol_ok, "goty": goty,
+                "tier": tier, "vol_ok": vol_ok, "goty": goty, "tres_verdes": tres_verdes,
                 "pivot_gap": p2 - p1,
                 "tipo": tipo, "soportes": soportes, "resistencias": resistencias,
                 "tp_pct": tp_pct,
@@ -898,8 +905,9 @@ def fmt_signal(s, stats):
     obv_txt = "" if obv is None else (" · OBV: " + ("distribución" if obv < 0 else "acumulación"))
     lineas.append(f"📊 Volumen: {s['vol_ratio']:.1f}× la media{obv_txt}")
     if s.get("goty"):
-        lineas.append("✨ **Patrón GOTY**: 3 velas verdes seguidas · la última con volumen "
-                      f"{s['vol_ratio']:.1f}× · RSI {s.get('rsi_now', 0):.1f}")
+        extra = " · 3 velas verdes ✓" if s.get("tres_verdes") else ""
+        lineas.append(f"✨ **Patrón GOTY**: volumen {s['vol_ratio']:.1f}× · "
+                      f"RSI {s.get('rsi_now', 0):.1f}{extra}")
     deriv = linea_derivados(s.get("_deriv"))
     if deriv:
         lineas.append(deriv)
