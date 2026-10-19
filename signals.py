@@ -277,12 +277,13 @@ def send_discord(text, env=None, image=None, canal=None):
             headers["Authorization"] = f"Bot {token}"
         adjuntar = bool(image and i == 1 and os.path.exists(image))
         if adjuntar:
-            payload = {"content": parte, **({"username": "Señales crypto"} if hook else {})}
+            # flags=4 (SUPPRESS_EMBEDS): sin vista previa de los links (TradingView/MEXC)
+            payload = {"content": parte, "flags": 4, **({"username": "Señales crypto"} if hook else {})}
             cuerpo, ctype = _multipart({"payload_json": json.dumps(payload)},
                                        {"files[0]": (os.path.basename(image), _leer(image), "image/png")})
             headers["Content-Type"] = ctype
         else:
-            cuerpo = json.dumps({"content": parte,
+            cuerpo = json.dumps({"content": parte, "flags": 4,
                                  **({"username": "Señales crypto"} if hook else {})}).encode()
             headers["Content-Type"] = "application/json"
         try:
