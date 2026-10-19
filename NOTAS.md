@@ -528,3 +528,23 @@ El bot corre en **GitHub Actions** (repo público `COEFR/Hermes-Signal-bot`, wor
 - **`salud.py` consciente de la arquitectura**: detecta que el bot ya no corre en la VPS (`EN_GITHUB`) y, en vez de fallar por los 9 crons y los logs locales, audita el lado de GitHub: antigüedad y conclusión de la última corrida, corridas fallidas, **quién la disparó** (si fue el programador de GitHub, el reloj externo puede estar caído), antigüedad del último commit de estado y del informe del runner. Pasó de **17 fallos falsos** a **41 OK · 2 avisos · 0 fallos**.
 - **Vigilante del silencio** (`vigilante_silencio.py`, cron cada 10 min en la VPS): avisa por Telegram si la última corrida tiene más de 45 min, si fallan 3 seguidas, o si el disparo vino del programador de GitHub; anti-spam de 2 h y aviso de recuperación. Probado: `--seco` (no manda), `--tope 1` (detecta el silencio), `--probar-aviso` (manda un «escribiendo…» invisible, sin ruido). Log en `logs/cron_vigilante.log`.
 - **Hora del reporte diario — DECIDIDO (2026-10-06)**: se mantiene el horario de siempre, **12:00 Bolivia = 16:00 UTC** para el reporte diario y **lunes 13:00 Bolivia = 17:00 UTC** para el marcador. Los umbrales viven en `tareas_del_dia()` (`hora >= 16`, `dia == 0 and hora >= 17`) y los horarios `0 12`/`0 13 * * 1` se **sacaron del `schedule` del workflow**: con el programador de GitHub atrasado (1-9 h) podían disparar el reporte a cualquier hora; ahora solo la lógica por hora decide. Casos probados: 12 UTC → nada · 15 UTC → nada · 16 UTC → reporte · otra vez el mismo día → nada · lunes 17 UTC → marcador.
+
+## 2026-10-19 · Señales: canal GOTY, 200 pares, perfiles en paralelo y reloj externo
+
+- **Canal nuevo `✨-rsi-goty`** (id `1561579030417899571`): recibe las divergencias bajistas que
+  cumplen el patrón medido. Regla vigente: **volumen ≥1,0× la media + RSI ≥55**; las "3 velas
+  verdes seguidas" quedan como **etiqueta** en el mensaje, no como filtro.
+- **Por qué esos umbrales** (medido el 19-oct sobre 359 divergencias, 20 pares, 15m y 1h, 30 días):
+  con volumen ≥1,2× y 3 verdes salían **0 señales**; con ≥1,0× + RSI ≥55 salen **27** con
+  **+1,74 %** de movimiento medio (el mejor de las variantes probadas). La regla vieja recortaba
+  de 27 a 3 señales al mes.
+- **Escáner: 90 → 200 pares** (top por volumen). El escaneo está paralelizado: ~68 s por perfil.
+- **Workflow con los 4 perfiles en paralelo** (`senales` con matrix premium/normales/momentum/rebote
+  + job `seguimiento`), cada uno con su grupo de concurrencia y su **`state_<perfil>.json`**.
+  `gh_run.py` acepta el perfil como argumento (`python3 gh_run.py premium`). Ciclo: **~4 min**
+  (antes 6,5-7,2 con 90 pares en fila).
+- **Reloj externo en cron-job.org** (cada 5 min al `bot.yml/dispatches`); el cron de la VPS
+  (`disparar_bot.sh`) quedó **`#PAUSADO`** el 19-oct. Respaldo: `schedule` de GitHub cada 5 min
+  (impuntual, pero está).
+- **Verificado**: corridas cada ~5 min, 5 jobs en verde, señales llegando a premium, cantidad y
+  GOTY con la línea `✨ Patrón GOTY`.
