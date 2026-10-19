@@ -1,11 +1,11 @@
-2026-10-19 21:31:30 UTC
+2026-10-19 21:32:40 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000029699 · python 3.12.3
+runner: GitHub Actions 1000029714 · python 3.12.3
 
-[OK ] contexto de mercado: 36 s
-      2026-10-19 21:30:50 sin novedades (0 evento(s) dentro del silencio de 2 h)
-[OK ] seguimiento: 40 s
-      2026-10-19 21:31:24 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-19 21:31:26 discord enviado ok=True (1 mensaje(s))
-      2026-10-19 21:31:29 discord enviado ok=True (1 mensaje(s), con imagen)
-      2026-10-19 21:31:30 cierres publicados: 5 · avisos de seguimiento: 3 · pendientes revisadas: 48
+[OK ] contexto de mercado: 20 s
+      2026-10-19 21:32:01 sin novedades (0 evento(s) dentro del silencio de 2 h)
+[OK ] seguimiento: 39 s
+      2026-10-19 21:32:33 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 21:32:36 discord enviado ok=True (1 mensaje(s))
+      2026-10-19 21:32:39 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 21:32:40 cierres publicados: 5 · avisos de seguimiento: 3 · pendientes revisadas: 48
