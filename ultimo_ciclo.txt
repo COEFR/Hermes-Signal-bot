@@ -1,20 +1,29 @@
-2026-10-19 03:24:41 UTC
+2026-10-19 03:32:01 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000022969 · python 3.12.3
+runner: GitHub Actions 1000022987 · python 3.12.3
 
-[OK ] premium: 66 s
-      2026-10-19 03:21:19 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥20
-      2026-10-19 03:22:24   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] normales: 66 s
-      2026-10-19 03:22:25 escaneo: 90 pares × 15m,30m,1h,4h,1d · lado=short · datos=https://data-api.binance.vision · volumen OFF · ADX OFF
-      2026-10-19 03:23:31   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] momentum: 14 s
-      2026-10-19 03:23:31 escaneo: 90 pares × 1d · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-19 03:23:44   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] rebote: 14 s
-      2026-10-19 03:23:45 escaneo: 90 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
-      2026-10-19 03:23:58   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
-[OK ] contexto de mercado: 22 s
-      2026-10-19 03:24:20 sin novedades (0 evento(s) dentro del silencio de 2 h)
-[OK ] seguimiento: 21 s
-      2026-10-19 03:24:41 cierres publicados: 0 · avisos de seguimiento: 0 · pendientes revisadas: 39
+[OK ] premium: 149 s
+      2026-10-19 03:27:38     PARTIUSDT/1d · puntaje 3/10 → cantidad
+      2026-10-19 03:27:38 !! fallo telegram: HTTP Error 400: Bad Request
+      2026-10-19 03:27:39 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 03:27:39   3 señales enviadas de a una
+[OK ] normales: 154 s
+      2026-10-19 03:30:08 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 03:30:12     PARTIUSDT/1d · puntaje 3/10 → cantidad
+      2026-10-19 03:30:13 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 03:30:13   4 señales enviadas de a una
+[OK ] momentum: 37 s
+      2026-10-19 03:30:45 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 03:30:49     SOXSBUSDT/1d · puntaje 3/10 → canal por defecto
+      2026-10-19 03:30:50 discord enviado ok=True (1 mensaje(s), con imagen)
+      2026-10-19 03:30:50   2 señales enviadas de a una
+[OK ] rebote: 27 s
+      2026-10-19 03:30:52 watchlist actualizada: 200 pares (top 200)
+      2026-10-19 03:30:52 escaneo: 200 pares × 1h · lado=short · datos=https://data-api.binance.vision · volumen ON · ADX ≥25
+      2026-10-19 03:31:17   sin alertas que mandar (detectadas: 0, filtradas por puntaje ≥0.0: 0)
+[OK ] contexto de mercado: 19 s
+      2026-10-19 03:31:37 sin novedades (0 evento(s) dentro del silencio de 2 h)
+[OK ] seguimiento: 24 s
+      2026-10-19 03:31:54 discord enviado ok=True (1 mensaje(s))
+      2026-10-19 03:32:00 discord enviado ok=True (1 mensaje(s))
+      2026-10-19 03:32:01 cierres publicados: 0 · avisos de seguimiento: 2 · pendientes revisadas: 48
