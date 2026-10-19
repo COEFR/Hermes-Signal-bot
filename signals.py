@@ -31,6 +31,7 @@ Costo: cero tokens de LLM. El script calcula y manda el mensaje él mismo por la
 import argparse
 import json
 import os
+import re
 import time
 import urllib.parse
 import urllib.request
@@ -190,7 +191,14 @@ def _leer(path):
         return fh.read()
 
 
+def _md_a_html(texto):
+    """Los mensajes se escriben con enlaces markdown (Discord los entiende); Telegram usa
+    parse_mode=HTML, así que acá se convierten a <a href>."""
+    return re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', texto)
+
+
 def send_telegram(text, image=None):
+    text = _md_a_html(text)
     env = env_file()
     token = env.get("TELEGRAM_BOT_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN")
     chat = env.get("TELEGRAM_HOME_CHANNEL") or os.environ.get("TELEGRAM_HOME_CHANNEL")
@@ -884,7 +892,7 @@ def enlaces(s):
     intervalo = INTERVALO_TV.get(tf, "15")
     tv = f"https://www.tradingview.com/chart/?symbol=BINANCE%3A{sym}&interval={intervalo}"
     mexc = f"https://www.mexc.com/exchange/{base}_USDT"
-    return f"🔗 TradingView: {tv}\n🔗 MEXC: {mexc}"
+    return f"🔗 Links\n[TradingView]({tv}) · [MEXC]({mexc})"
 
 
 def fmt_signal(s, stats):
