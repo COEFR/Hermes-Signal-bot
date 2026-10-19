@@ -24,14 +24,17 @@ on:
 permissions:
   contents: write               # necesario para commitear el estado
 
-concurrency:
-  group: bot-senales
-  cancel-in-progress: false     # si una corrida se atrasa, la siguiente espera (no se pisa el estado)
-
 jobs:
-  ciclo:
+  senales:
+    strategy:
+      fail-fast: false          # si un perfil falla, los otros siguen
+      matrix:
+        perfil: [premium, normales, momentum, rebote]
+    concurrency:
+      group: bot-${{ matrix.perfil }}
+      cancel-in-progress: false # si se atrasa, la siguiente espera (no se pisa el estado)
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 12
     steps:
       - name: Traer el repo (git clone, sin acciones de terceros)
         run: |
@@ -75,20 +78,21 @@ jobs:
         working-directory: repo
         run: python3 dev/prueba_entrega.py
 
-      - name: Correr los flujos del ciclo
+      - name: Correr el perfil ${{ matrix.perfil }}
         working-directory: repo
         env:
           SCHEDULE: ${{ inputs.tarea || github.event.schedule }}
-        run: python3 gh_run.py
+        run: python3 gh_run.py ${{ matrix.perfil }}
 
-      - name: Guardar el estado (para no repetir alertas ni perder el marcador)
+      - name: Guardar el estado del perfil
         working-directory: repo
         run: |
-          git add -A
+          git add -A -- "state_${{ matrix.perfil }}.json" || true
           if git diff --cached --quiet; then
             echo "sin cambios de estado"
+            exit 0
           else
-            git commit -m "estado $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git commit -m "estado ${{ matrix.perfil }} $(date -u '+%Y-%m-%d %H:%M UTC')"
             # REBASE + REINTENTO: si alguien (o yo, desde la máquina) empujó cambios mientras el ciclo
             # corría, el push directo se rechaza y la corrida entera quedaba en rojo (pasó en #501 y
             # #502). Con pull --rebase --autostash y 3 intentos, el bot se reajusta solo.
@@ -107,5 +111,73 @@ jobs:
           curl -s -o /dev/null -X POST \
             "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
             -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
-            --data-urlencode "text=⚠️ El bot de señales falló en GitHub Actions:
+            --data-urlencode "text=⚠️ El perfil ${{ matrix.perfil }} del bot de señales falló en GitHub Actions:
+          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  seguimiento:
+    concurrency:
+      group: bot-seguimiento
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Traer el repo (git clone, sin acciones de terceros)
+        run: |
+          git clone --depth 1 \
+            "https://x-access-token:${{ github.token }}@github.com/${GITHUB_REPOSITORY}.git" repo
+          cd repo
+          git config user.name "bot-senales"
+          git config user.email "bot-senales@users.noreply.github.com"
+
+      - name: Dependencias (Pillow para los gráficos)
+        run: python3 -m pip install --quiet "pillow>=10,<13"
+
+      - name: Credenciales
+        run: |
+          mkdir -p ~/.hermes
+          cat > ~/.hermes/.env <<EOF
+          TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_HOME_CHANNEL=${{ secrets.TELEGRAM_HOME_CHANNEL }}
+          DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_HOME_CHANNEL=${{ secrets.DISCORD_HOME_CHANNEL }}
+          DISCORD_SIGNALS_CHANNEL=${{ secrets.DISCORD_SIGNALS_CHANNEL }}
+          EOF
+          chmod 600 ~/.hermes/.env
+
+      - name: Prueba de entrega (solo si la pedís al disparar)
+        if: github.event_name == 'workflow_dispatch' && inputs.probar_entrega
+        working-directory: repo
+        run: python3 dev/prueba_entrega.py
+
+      - name: Contexto de mercado y seguimiento
+        working-directory: repo
+        env:
+          SCHEDULE: ${{ inputs.tarea || github.event.schedule }}
+        run: python3 gh_run.py "contexto de mercado" seguimiento
+
+      - name: Guardar estado y el informe del ciclo
+        working-directory: repo
+        run: |
+          git add -A -- state.json ultimo_ciclo.txt ultimas_tareas.json || true
+          if git diff --cached --quiet; then
+            echo "sin cambios de estado"
+            exit 0
+          else
+            git commit -m "estado seguimiento $(date -u '+%Y-%m-%d %H:%M UTC')"
+            for i in 1 2 3 4; do
+              if git pull --rebase --autostash origin main && git push; then
+                echo "estado guardado"; break
+              fi
+              echo "push rechazado, reintento $i…"
+              sleep 4
+            done
+          fi
+
+      - name: Avisar por Telegram si algo falló
+        if: failure()
+        run: |
+          curl -s -o /dev/null -X POST \
+            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
+            --data-urlencode "text=⚠️ El seguimiento del bot falló en GitHub Actions:
           ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

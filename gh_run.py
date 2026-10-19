@@ -149,19 +149,31 @@ def correr(nombre, args):
 
 def main():
     horario = os.environ.get("SCHEDULE", "").strip()
-    plan = PLAN.get(horario) or PLAN["*/15 * * * *"]
-    # OJO CON EL ORDEN: TAREAS tiene que estar definido ANTES de llamar a tareas_del_dia(), porque ahí
-    # se usa para escribir el archivo que anota "ya se mandó hoy". Estaba definido DESPUÉS (abajo), así
-    # que `ruta` quedaba en None, el estado no se escribía nunca y el REPORTE DIARIO salía en cada ciclo
-    # —se midió: 98 veces en vez de 1—. Bug de orden, no de lógica.
-    global TAREAS
-    TAREAS = os.path.join(AQUI, "ultimas_tareas.json")
-    extra = tareas_del_dia()
-    if extra:
-        # sin duplicar: el programador de GitHub puede disparar el MISMO horario que la lógica por
-        # hora, y ahí el flujo salía dos veces en el mismo ciclo (reporte diario duplicado).
-        plan = list(dict.fromkeys(list(plan) + extra))
-        print(f"tareas del día que corresponden ahora: {', '.join(extra)}", flush=True)
+    # Un perfil por job: `python3 gh_run.py premium` corre SOLO ese flujo. Así el workflow puede
+    # lanzar los cuatro perfiles en paralelo (cada uno con su estado) y el ciclo baja a ~2-3 min.
+    seleccion = [a for a in sys.argv[1:] if not a.startswith("-")]
+    if seleccion:
+        desconocidos = [x for x in seleccion if x not in FLUJOS]
+        if desconocidos:
+            print(f"flujo desconocido: {', '.join(desconocidos)}")
+            print(f"válidos: {', '.join(FLUJOS)}")
+            return 2
+        plan = seleccion
+        print(f"corrida de un solo flujo: {', '.join(plan)}", flush=True)
+    else:
+        plan = PLAN.get(horario) or PLAN["*/15 * * * *"]
+        # OJO CON EL ORDEN: TAREAS tiene que estar definido ANTES de llamar a tareas_del_dia(), porque
+        # ahí se usa para escribir el archivo que anota "ya se mandó hoy". Estaba definido DESPUÉS, así
+        # que `ruta` quedaba en None, el estado no se escribía nunca y el REPORTE DIARIO salía en cada
+        # ciclo —se midió: 98 veces en vez de 1—. Bug de orden, no de lógica.
+        global TAREAS
+        TAREAS = os.path.join(AQUI, "ultimas_tareas.json")
+        extra = tareas_del_dia()
+        if extra:
+            # sin duplicar: el programador de GitHub puede disparar el MISMO horario que la lógica por
+            # hora, y ahí el flujo salía dos veces en el mismo ciclo (reporte diario duplicado).
+            plan = list(dict.fromkeys(list(plan) + extra))
+            print(f"tareas del día que corresponden ahora: {', '.join(extra)}", flush=True)
     print(f"corrida de GitHub Actions · horario disparado: {horario or '(manual)'}")
     print(f"flujos a correr: {', '.join(plan)}" + ("  [EN SECO]" if SECO else ""))
     for carpeta in ("logs", "charts"):
