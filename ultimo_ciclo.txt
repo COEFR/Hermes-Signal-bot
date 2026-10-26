@@ -1,11 +1,11 @@
-2026-10-26 05:13:14 UTC
+2026-10-26 05:16:44 UTC
 horario disparado: (manual) · seco: False
-runner: GitHub Actions 1000088517 · python 3.14.4
+runner: GitHub Actions 1000088535 · python 3.14.4
 
-[OK ] contexto de mercado: 22 s
-      2026-10-26 05:12:06 sin novedades (0 evento(s) dentro del silencio de 2 h)
-[OK ] seguimiento: 68 s
+[OK ] contexto de mercado: 24 s
+      2026-10-26 05:15:34 sin novedades (0 evento(s) dentro del silencio de 2 h)
+[OK ] seguimiento: 70 s
       [TradingView](https://www.tradingview.com/chart/?symbol=BINANCE%3ASOXSBUSDT&interval=D) · [MEXC](https://www.mexc.com/exchange/SOXSB_USDT)
       
       📊 Marcador de 30 días: 239 al objetivo / 255 al stop · 46% · +0.02% por alerta (n=522)
-      2026-10-26 05:13:14 cierres publicados: 26 · avisos de seguimiento: 0 · pendientes revisadas: 48
+      2026-10-26 05:16:44 cierres publicados: 26 · avisos de seguimiento: 0 · pendientes revisadas: 48
