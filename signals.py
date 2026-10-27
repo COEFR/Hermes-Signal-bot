@@ -203,7 +203,8 @@ def _md_a_html(texto):
     return re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', texto)
 
 
-def send_telegram(text, image=None):
+def send_telegram(text, image=None, _reintento=False):
+    crudo = text
     text = _md_a_html(text)
     env = env_file()
     token = env.get("TELEGRAM_BOT_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN")
@@ -214,10 +215,12 @@ def send_telegram(text, image=None):
         return False
     try:
         if image and os.path.exists(image):
-            # Telegram corta los pies de foto en 1024: la imagen lleva el resumen y el texto largo
-            # va aparte, para no perder ninguna cifra.
-            resumen = text if len(text) <= 1000 else text[:900] + "…"
-            cuerpo, ctype = _multipart({"chat_id": chat, "parse_mode": "HTML", "caption": resumen},
+            # Telegram corta los pies de foto en 1024. Se recorta el texto MARKDOWN (no el
+            # HTML ya convertido): cortar el HTML dejaba etiquetas a medias y Telegram
+            # respondía 400 "can't parse entities" — así se perdían señales.
+            resumen = crudo if len(crudo) <= 900 else crudo[:900] + "…"
+            cuerpo, ctype = _multipart({"chat_id": chat, "parse_mode": "HTML",
+                                        "caption": _md_a_html(resumen)},
                                        {"photo": (os.path.basename(image), _leer(image), "image/png")})
             url, accion = f"https://api.telegram.org/bot{token}/sendPhoto", "sendPhoto"
         else:
@@ -232,10 +235,15 @@ def send_telegram(text, image=None):
             ok = json.loads(r.read().decode()).get("ok", False)
         log(f"telegram {accion} enviado ok={ok}")
         if image and os.path.exists(image) and len(text) > 1000:
-            send_telegram(text, None)          # el detalle completo, como mensaje aparte
+            send_telegram(crudo, None)          # el detalle completo, como mensaje aparte
         return ok
     except Exception as e:
-        log(f"!! fallo telegram: {e}")
+        log(f"!! fallo telegram ({accion}): {e}")
+        # Si falló con foto, se reintenta como texto plano: perder la imagen es mejor
+        # que perder la señal y marcar la corrida en rojo por un pie de foto.
+        if image and not _reintento:
+            log("   reintento telegram sin imagen")
+            return send_telegram(crudo, None, _reintento=True)
         return False
 
 
