@@ -32,6 +32,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -43,6 +44,11 @@ import orderblocks as OB
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATE_PATH = os.path.join(HERE, "state.json")
 LOG_DIR = os.path.join(HERE, "logs")
+
+# Entregas que fallaron en esta corrida. Si queda > 0, la corrida termina con
+# código != 0 para que GitHub la marque en ROJO y dispare el aviso por Telegram
+# (antes un 401 de Discord dejaba la corrida verde y nadie se enteraba).
+ENVIOS_FALLIDOS = 0
 SHORTS_RESULTS = os.path.join(HERE, "shorts_results.json")
 BASE = "https://api.binance.com"
 # Hosts de datos, en orden. Medido: `api.binance.com` devuelve **HTTP 451** a IPs de EE.UU. (los
@@ -311,6 +317,9 @@ def deliver(text, image=None, canal=None):
     else:
         res["telegram"] = None
     res["discord"] = send_discord(text, env, image, canal=canal)
+    global ENVIOS_FALLIDOS
+    if any(v is False for v in res.values()):
+        ENVIOS_FALLIDOS += 1
     if not any(v for v in res.values()):
         log("!! ningún canal pudo enviar; imprimo el contenido")
         print(text)
@@ -1216,6 +1225,14 @@ def report(args, st, dry=False):
     return 0
 
 
+def _salir_si_hubo_fallos():
+    """Si alguna entrega falló, termina con código 3: GitHub marca la corrida en
+    rojo y el workflow manda el aviso por Telegram."""
+    if ENVIOS_FALLIDOS:
+        log(f"!! {ENVIOS_FALLIDOS} entrega(s) fallaron en esta corrida -> salgo con código 3")
+        sys.exit(3)
+
+
 def main():
     global USE_VOL, MIN_ADX, SIDE, INTERVALS, FRESH_BARS, WATCHLIST_N, MIN_ATR_PCT, \
         NORMAL_SIN_VOLUMEN, NORMAL_INTERVALS, MIN_SCORE, SL_MULT, TARGET_MODE, \
@@ -1307,6 +1324,7 @@ def main():
             report(args, st, args.dry_run)
         else:
             scan(args, st, args.dry_run)
+        _salir_si_hubo_fallos()
         return
     st = load_state()
     try:
@@ -1316,6 +1334,7 @@ def main():
             scan(args, st, args.dry_run)
     finally:
         save_state(st)
+    _salir_si_hubo_fallos()
 
 
 if __name__ == "__main__":
