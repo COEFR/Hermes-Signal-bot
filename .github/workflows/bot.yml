@@ -179,3 +179,33 @@ jobs:
             -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
             --data-urlencode "text=⚠️ El seguimiento del bot falló en GitHub Actions:
           ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+  reencolar:
+    # Cadena autonoma: al terminar el ciclo, este job espera y vuelve a disparar
+    # el workflow. Asi el bot corre cada ~15 min sin VPS, sin cron externo y sin
+    # depender de ninguna maquina encendida. workflow_dispatch es el unico evento
+    # que GITHUB_TOKEN si puede disparar (el resto queda bloqueado a proposito).
+    needs: [senales, seguimiento]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: bot-chain
+      cancel-in-progress: false
+    permissions:
+      actions: write
+    steps:
+      - name: Esperar el lapso entre ciclos y relanzar el workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sleep 720
+          code=$(curl -sS -o /tmp/dispatch.out -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/bot.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "dispatch http=$code"
+          if [ "$code" != "204" ]; then
+            cat /tmp/dispatch.out || true
+          fi
