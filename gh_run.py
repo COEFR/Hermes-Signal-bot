@@ -46,7 +46,7 @@ def args_secos(args):
 
 FLUJOS = {
     "premium": ["signals.py", "--side", "short", "--min-adx", "20", "--intervals", "15m,30m,1h,4h,1d",
-                "--label", "premium", "--min-score", "0", "--individual",
+                "--label", "premium", "--no-telegram", "--min-score", "0", "--individual",
                 "--canal-alto", CANAL_ALTO, "--canal-medio", CANAL_MEDIO, "--canal-bajo", CANAL_BAJO],
     "normales": ["signals.py", "--side", "short", "--min-adx", "0", "--no-vol", "--intervals",
                  "15m,30m,1h,4h,1d", "--label", "normales", "--discord-channel", CANAL_NORMALES,
@@ -59,8 +59,8 @@ FLUJOS = {
                "--discord-channel", CANAL_REBOTE, "--no-telegram", "--individual", "--min-score", "0"],
     "contexto de mercado": ["mercado.py"],
     "seguimiento": ["tracker.py"],
-    "reporte diario": ["signals.py", "--report"],
-    "marcador semanal": ["tracker.py", "--resumen", "--dias", "7", "--telegram"],
+    "reporte diario": ["signals.py", "--report", "--no-telegram"],
+    "marcador semanal": ["tracker.py", "--resumen", "--dias", "7"],
 }
 
 PLAN = {

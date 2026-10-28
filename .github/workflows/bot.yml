@@ -103,14 +103,14 @@ jobs:
             done
           fi
 
-      - name: Avisar por Telegram si algo falló
+      - name: Avisar por Discord si algo falló
         if: failure()
         run: |
           curl -s -o /dev/null -X POST \
-            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
-            --data-urlencode "text=⚠️ El perfil ${{ matrix.perfil }} del bot de señales falló en GitHub Actions:
-          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "https://discord.com/api/v10/channels/${{ secrets.DISCORD_HOME_CHANNEL }}/messages" \
+            -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"content":"⚠️ El perfil ${{ matrix.perfil }} del bot de señales falló en GitHub Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
 
   seguimiento:
     concurrency:
@@ -171,14 +171,14 @@ jobs:
             done
           fi
 
-      - name: Avisar por Telegram si algo falló
+      - name: Avisar por Discord si algo falló
         if: failure()
         run: |
           curl -s -o /dev/null -X POST \
-            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
-            --data-urlencode "text=⚠️ El seguimiento del bot falló en GitHub Actions:
-          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "https://discord.com/api/v10/channels/${{ secrets.DISCORD_HOME_CHANNEL }}/messages" \
+            -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"content":"⚠️ El seguimiento del bot falló en GitHub Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
 
   alerta:
     # Aviso cuando CUALQUIER job falla: entrega rechazada, error de escaneo, etc.
@@ -188,9 +188,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Avisar por Telegram
+      - name: Avisar por Discord
         run: |
           curl -s -o /dev/null -X POST \
-            "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_HOME_CHANNEL }}" \
-            --data-urlencode "text=ALERTA: el bot de senales fallo. Revisar: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            "https://discord.com/api/v10/channels/${{ secrets.DISCORD_HOME_CHANNEL }}/messages" \
+            -H "Authorization: Bot ${{ secrets.DISCORD_BOT_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"content":"ALERTA: el bot de senales fallo. Revisar: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
